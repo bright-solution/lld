@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getLevelWiseTeam } from "../../api/user.api";
+import { Users } from "lucide-react";
 
 const UserTeam = () => {
     const [activeLevel, setActiveLevel] = useState(null);
+    const defaultLevels = [1, 2, 3];
 
     const { data, isLoading, error } = useQuery({
         queryKey: ["team"],
@@ -12,6 +14,17 @@ const UserTeam = () => {
     });
 
     const response = data?.data || [];
+
+    const formattedData = defaultLevels.map((level) => {
+        const found = response.find((item) => item.level === level);
+        return (
+            found || {
+                level,
+                totalUsers: 0,
+                users: [],
+            }
+        );
+    });
 
     // 🔄 Loading state
     if (isLoading) {
@@ -37,12 +50,12 @@ const UserTeam = () => {
 
                 {/* ---------------- TEAM STRUCTURE ---------------- */}
                 <div className="bg-[#121212] border border-[var(--primary-color)]/60 rounded-2xl p-5">
-                    <h2 className="text-white font-semibold mb-4">
-                        👑 My Team Structure
+                    <h2 className="text-white font-semibold mb-4 flex items-center gap-2 ">
+                        <Users size={20} className="text-[var(--primary-color)]" /> My Team Structure
                     </h2>
 
                     <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-                        {response.map((team) => (
+                        {formattedData?.map((team) => (
                             <div
                                 key={team.level}
                                 className="bg-black/40 border border-[var(--primary-color)]/30 rounded-xl px-4 py-3"
@@ -115,7 +128,7 @@ const UserTeam = () => {
                                                 </div>
                                             ))
                                         ) : (
-                                            <p className="text-gray-400 text-xs">
+                                            <p className="text-gray-400 text-center text-xs">
                                                 No users found
                                             </p>
                                         )}

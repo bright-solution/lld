@@ -63,28 +63,28 @@ const UserHome = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
           <StatCard
-            title="TODAY INCOME"
+            title="Total Stake Amount"
             value="$0"
             subText="Lost: $0"
             icon={<TrendingUpIcon className="text-[var(--primary-color)]" />}
             colorVar="success"
           />
           <StatCard
-            title="TOTAL INCOME"
+            title="Total Level Income"
             value="$0"
             subText="Lost: $0"
             icon={<TrendingDownIcon className="text-[var(--primary-color)]" />}
             colorVar="danger"
           />
           <StatCard
-            title="TOTAL TEAM"
+            title="Total Users"
             value="0"
             subText="Today: 0"
             icon={<GroupIcon className="text-[var(--primary-color)]" />}
             colorVar="primary"
           />
           <StatCard
-            title="TOTAL BUSINESS"
+            title="Total Investments"
             value="$0"
             subText="Today: $0"
             icon={<BusinessIcon className="text-[var(--primary-color)]" />}
