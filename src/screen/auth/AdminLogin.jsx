@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setUser } from '../../redux/slices/authSlice';
+import { setToken, setUser } from '../../redux/slices/authSlice';
 import BackButton from '../../components/ui/BackButton';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { adminLogin } from '../../api/admin.api';
+import { showSnackbar } from '../../redux/slices/snackbarSlice';
 
 const AdminLogin = () => {
     const [formData, setFormData] = useState({
@@ -24,10 +26,29 @@ const AdminLogin = () => {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(setUser({ ...formData, token: "token", role: "admin" }));
-        navigate("/admin/dashboard");
+        if (formData.email === "" || formData.password === "") {
+            dispatch(showSnackbar({
+                message: "All fields are required",
+                severity: "error"
+            }));
+            return
+        }
+        try {
+            const response = await adminLogin(formData);
+            if (response.success) {
+                dispatch(setUser(response?.data));
+                dispatch(setToken(response?.token));
+                navigate("/admin/dashboard");
+            }
+        } catch (error) {
+            dispatch(showSnackbar({
+                message: error?.message,
+                severity: "error"
+            }));
+        }
+       
     }
 
     return (
